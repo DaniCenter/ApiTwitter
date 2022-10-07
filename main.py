@@ -1,9 +1,8 @@
 from datetime import date, datetime
-from email.policy import default
-from typing import Optional
+from typing import List, Optional
 from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field, validator
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 
 app = FastAPI()
 
@@ -40,3 +39,70 @@ class Tweet(BaseModel):
 @app.get("/")
 def home():
     return {"Twiter API": "Working"}
+
+
+# Users
+@app.post(
+    "/singup",
+    response_model=UserBase,
+    status_code=status.HTTP_201_CREATED,
+    summary="Register a user",
+    tags=["Users"],
+)
+def signup():
+    pass
+
+
+@app.post(
+    "/login",
+    response_model=UserBase,
+    status_code=status.HTTP_200_OK,
+    summary="Login a user",
+    tags=["Users"],
+)
+def login():
+    pass
+
+
+@app.get(
+    "/users",
+    response_model=List[UserBase],
+    status_code=status.HTTP_200_OK,
+    summary="Show all users",
+    tags=["Users"],
+)
+def signup():
+    pass
+
+
+@app.get(
+    "/users/{user_id}",
+    response_model=UserBase,
+    status_code=status.HTTP_200_OK,
+    summary="Show a user",
+    tags=["Users"],
+)
+def show_a_user():
+    pass
+
+
+@app.delete(
+    "/users/{user_id}/delete",
+    response_model=UserBase,
+    status_code=status.HTTP_200_OK,
+    summary="Delete a user",
+    tags=["Users"],
+)
+def delete_a_user():
+    pass
+
+
+@app.put(
+    "/users/{user_id}/update",
+    response_model=UserBase,
+    status_code=status.HTTP_200_OK,
+    summary="Update a user",
+    tags=["Users"],
+)
+def update_a_user():
+    pass
