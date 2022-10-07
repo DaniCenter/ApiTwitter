@@ -71,7 +71,7 @@ def login():
     summary="Show all users",
     tags=["Users"],
 )
-def signup():
+def show_users():
     pass
 
 
@@ -105,4 +105,60 @@ def delete_a_user():
     tags=["Users"],
 )
 def update_a_user():
+    pass
+
+
+# Tweets
+@app.get(
+    "/",
+    response_model=Tweet,
+    status_code=status.HTTP_200_OK,
+    summary="Show all tweets",
+    tags=["Tweets"],
+)
+def show_tweets():
+    return {"Twiter API": "Working"}
+
+
+@app.post(
+    "/post",
+    response_model=Tweet,
+    status_code=status.HTTP_201_CREATED,
+    summary="Post a tweet",
+    tags=["Twwets"],
+)
+def post():
+    pass
+
+
+@app.get(
+    "/tweets/{tweet_id}",
+    response_model=Tweet,
+    status_code=status.HTTP_200_OK,
+    summary="Show a tweet",
+    tags=["Tweets"],
+)
+def get():
+    pass
+
+
+@app.delete(
+    "/tweets/{tweet_id}",
+    response_model=Tweet,
+    status_code=status.HTTP_200_OK,
+    summary="Delete a tweet",
+    tags=["Tweets"],
+)
+def delete():
+    pass
+
+
+@app.put(
+    "/tweets/{tweet_id}/update",
+    response_model=Tweet,
+    status_code=status.HTTP_200_OK,
+    summary="Update a tweet",
+    tags=["Tweets"],
+)
+def update():
     pass
