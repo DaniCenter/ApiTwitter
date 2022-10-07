@@ -1,8 +1,9 @@
+import json
 from datetime import date, datetime
 from typing import List, Optional
 from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field, validator
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, Body
 
 app = FastAPI()
 
@@ -49,8 +50,21 @@ def home():
     summary="Register a user",
     tags=["Users"],
 )
-def signup():
-    pass
+def signup(user: UserLogin = Body()):
+    """This paht operation register a user in the database
+
+    Returns:
+        UserBase.json: Returns a User object without its password information
+    """
+    with open("users.json", "r+", encoding="utf-8") as f:
+        result = json.loads(f.read())
+        user_dict = user.dict()
+        user_dict["user_id"] = str(user_dict["user_id"])
+        user_dict["birth_date"] = str(user_dict["birth_date"])
+        result.append(user_dict)
+        f.seek(0)
+        f.write(json.dumps(result))
+    return user
 
 
 @app.post(
