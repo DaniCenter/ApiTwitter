@@ -57,13 +57,13 @@ def signup(user: UserLogin = Body()):
         UserBase.json: Returns a User object without its password information
     """
     with open("users.json", "r+", encoding="utf-8") as f:
-        result = json.loads(f.read())
+        result = json.load(f)
         user_dict = user.dict()
         user_dict["user_id"] = str(user_dict["user_id"])
         user_dict["birth_date"] = str(user_dict["birth_date"])
         result.append(user_dict)
         f.seek(0)
-        f.write(json.dumps(result))
+        json.dump(result, f)
     return user
 
 
