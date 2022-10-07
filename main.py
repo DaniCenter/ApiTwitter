@@ -125,7 +125,7 @@ def show_tweets():
     response_model=Tweet,
     status_code=status.HTTP_201_CREATED,
     summary="Post a tweet",
-    tags=["Twwets"],
+    tags=["Tweets"],
 )
 def post():
     pass
