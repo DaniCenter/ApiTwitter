@@ -151,8 +151,8 @@ def show_tweets():
     summary="Post a tweet",
     tags=["Tweets"],
 )
-def post():
-    pass
+def post(tweet: Tweet = Body()):
+    return tweet
 
 
 @app.get(
