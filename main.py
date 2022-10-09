@@ -3,7 +3,7 @@ from datetime import date, datetime
 from typing import List, Optional
 from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field, validator
-from fastapi import FastAPI, status, Body
+from fastapi import FastAPI, status, Body, Path
 
 app = FastAPI()
 
@@ -105,13 +105,17 @@ def show_users():
 
 @app.get(
     "/users/{user_id}",
-    response_model=UserBase,
     status_code=status.HTTP_200_OK,
     summary="Show a user",
     tags=["Users"],
 )
-def show_a_user():
-    pass
+def show_a_user(user_id: str = Path(example="3fa85f64-5717-4562-b3fc-2c963f66afa6")):
+    with open("users.json", "r", encoding="utf-8") as f:
+        result = json.load(f)
+        for i in result:
+            if i["user_id"] == user_id:
+                return i
+        return "Not exist"
 
 
 @app.delete(
