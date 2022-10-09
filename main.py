@@ -33,7 +33,7 @@ class Tweet(BaseModel):
     tweet_id: UUID = Field()
     content: str = Field(max_length=256)
     create_at: datetime = Field(default=datetime.now())
-    update_at: Optional[datetime] = Field()
+    update_at: Optional[datetime] = Field(default=None)
     by: UserBase = Field()
 
 
@@ -152,6 +152,18 @@ def show_tweets():
     tags=["Tweets"],
 )
 def post(tweet: Tweet = Body()):
+    with open("tweets.json", "r+", encoding="utf-8") as f:
+        result = json.load(f)
+        tweet_dict = tweet.dict()
+        tweet_dict["tweet_id"] = str(tweet_dict["tweet_id"])
+        tweet_dict["create_at"] = str(tweet_dict["create_at"])
+        if tweet_dict["update_at"]:
+            tweet_dict["update_at"] = str(tweet_dict["update_at"])
+        tweet_dict["by"]["user_id"] = str(tweet_dict["by"]["user_id"])
+        tweet_dict["by"]["birth_date"] = str(tweet_dict["by"]["birth_date"])
+        result.append(tweet_dict)
+        f.seek(0)
+        json.dump(result, f)
     return tweet
 
 
