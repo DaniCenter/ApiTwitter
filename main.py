@@ -120,13 +120,20 @@ def show_a_user(user_id: str = Path(example="3fa85f64-5717-4562-b3fc-2c963f66afa
 
 @app.delete(
     "/users/{user_id}/delete",
-    response_model=UserBase,
     status_code=status.HTTP_200_OK,
     summary="Delete a user",
     tags=["Users"],
 )
-def delete_a_user():
-    pass
+def delete_a_user(user_id: str = Path(example="3fa85f64-5717-4562-b3fc-2c963f66afa6")):
+    with open("users.json", "r+", encoding="utf-8") as f:
+        result = json.load(f)
+        for idx, obj in enumerate(result):
+            if obj["user_id"] == user_id:
+                result.pop(idx)
+                with open("users.json", "w", encoding="utf-8") as f:
+                    f.write(json.dumps(result))
+                    return "Eliminated"
+        return "Not exist"
 
 
 @app.put(
