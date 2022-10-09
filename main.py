@@ -37,11 +37,6 @@ class Tweet(BaseModel):
     by: UserBase = Field()
 
 
-@app.get("/")
-def home():
-    return {"Twiter API": "Working"}
-
-
 # Users
 @app.post(
     "/singup",
@@ -135,13 +130,15 @@ def update_a_user():
 # Tweets
 @app.get(
     "/",
-    response_model=Tweet,
+    response_model=List[Tweet],
     status_code=status.HTTP_200_OK,
     summary="Show all tweets",
     tags=["Tweets"],
 )
 def show_tweets():
-    return {"Twiter API": "Working"}
+    with open("tweets.json", "r", encoding="utf-8") as f:
+        result = json.load(f)
+        return result
 
 
 @app.post(
