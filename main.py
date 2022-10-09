@@ -29,6 +29,11 @@ class UserLogin(UserBase):
     password: str = Field(min_length=7)
 
 
+class UserAuthLogin(BaseModel):
+    email: EmailStr = Field()
+    password: str = Field(min_length=7)
+
+
 class Tweet(BaseModel):
     tweet_id: UUID = Field()
     content: str = Field(max_length=256)
@@ -64,13 +69,17 @@ def signup(user: UserLogin = Body()):
 
 @app.post(
     "/login",
-    response_model=UserBase,
     status_code=status.HTTP_200_OK,
     summary="Login a user",
     tags=["Users"],
 )
-def login():
-    pass
+def login(userlogin: UserAuthLogin = Body()):
+    with open("users.json", "r", encoding="utf-8") as f:
+        result = json.load(f)
+    for i in result:
+        if userlogin.email == i["email"] and userlogin.password == i["password"]:
+            return "Successful logging"
+    return "Error logging"
 
 
 @app.get(
