@@ -3,7 +3,7 @@ from datetime import date, datetime
 from typing import List, Optional
 from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field, validator
-from fastapi import FastAPI, status, Body, Path
+from fastapi import FastAPI, status, Body, Path, HTTPException
 
 app = FastAPI()
 
@@ -76,7 +76,7 @@ def login(userlogin: UserAuthLogin = Body()):
     for i in result:
         if userlogin.email == i["email"] and userlogin.password == i["password"]:
             return "Successful logging"
-    return "Error logging"
+    raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="This person doesnot exist")
 
 
 @app.get(
@@ -130,7 +130,7 @@ def delete_a_user(user_id: str = Path(example="3fa85f64-5717-4562-b3fc-2c963f66a
                 with open("users.json", "w", encoding="utf-8") as f:
                     f.write(json.dumps(result))
                     return "Eliminated"
-        return "Not exist"
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist")
 
 
 @app.put(
@@ -155,7 +155,7 @@ def update_a_user(
                 with open("users.json", "w", encoding="utf-8") as f:
                     f.write(json.dumps(result))
                     return "Updated"
-        return "Not exist"
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist")
 
 # Tweets
 @app.get(
