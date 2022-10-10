@@ -68,10 +68,7 @@ def signup(user: UserLogin = Body()):
 
 
 @app.post(
-    "/login",
-    status_code=status.HTTP_200_OK,
-    summary="Login a user",
-    tags=["Users"],
+    "/login", status_code=status.HTTP_200_OK, summary="Login a user", tags=["Users"],
 )
 def login(userlogin: UserAuthLogin = Body()):
     with open("users.json", "r", encoding="utf-8") as f:
@@ -138,14 +135,27 @@ def delete_a_user(user_id: str = Path(example="3fa85f64-5717-4562-b3fc-2c963f66a
 
 @app.put(
     "/users/{user_id}/update",
-    response_model=UserBase,
     status_code=status.HTTP_200_OK,
     summary="Update a user",
     tags=["Users"],
 )
-def update_a_user():
-    pass
-
+def update_a_user(
+    user_id: str = Path(example="3fa85f64-5717-4562-b3fc-2c963f66afa6"),
+    user: UserBase = Body(),
+):
+    with open("users.json", "r+", encoding="utf-8") as f:
+        result = json.load(f)
+        for idx, obj in enumerate(result):
+            if obj["user_id"] == user_id:
+                result.pop(idx)
+                temp = user.dict()
+                temp["user_id"] = str(temp["user_id"])
+                temp["birth_date"] = str(temp["birth_date"])
+                result.append(temp)
+                with open("users.json", "w", encoding="utf-8") as f:
+                    f.write(json.dumps(result))
+                    return "Updated"
+        return "Not exist"
 
 # Tweets
 @app.get(
