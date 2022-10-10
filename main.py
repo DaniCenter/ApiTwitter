@@ -112,7 +112,7 @@ def show_a_user(user_id: str = Path(example="3fa85f64-5717-4562-b3fc-2c963f66afa
         for i in result:
             if i["user_id"] == user_id:
                 return i
-        return "Not exist"
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist")
 
 
 @app.delete(
@@ -196,13 +196,17 @@ def post(tweet: Tweet = Body()):
 
 @app.get(
     "/tweets/{tweet_id}",
-    response_model=Tweet,
     status_code=status.HTTP_200_OK,
     summary="Show a tweet",
     tags=["Tweets"],
 )
-def get():
-    pass
+def get(tweet_id: str = Path()):
+    with open("tweets.json", "r", encoding="utf-8") as f:
+        result = json.load(f)
+        for i in result:
+            if i["tweet_id"] == tweet_id:
+                return i
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This tweet doesnot exist")
 
 
 @app.delete(
