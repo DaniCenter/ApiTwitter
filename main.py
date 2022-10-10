@@ -76,7 +76,9 @@ def login(userlogin: UserAuthLogin = Body()):
     for i in result:
         if userlogin.email == i["email"] and userlogin.password == i["password"]:
             return "Successful logging"
-    raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="This person doesnot exist")
+    raise HTTPException(
+        status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="This person doesnot exist"
+    )
 
 
 @app.get(
@@ -112,7 +114,9 @@ def show_a_user(user_id: str = Path(example="3fa85f64-5717-4562-b3fc-2c963f66afa
         for i in result:
             if i["user_id"] == user_id:
                 return i
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist"
+        )
 
 
 @app.delete(
@@ -130,7 +134,9 @@ def delete_a_user(user_id: str = Path(example="3fa85f64-5717-4562-b3fc-2c963f66a
                 with open("users.json", "w", encoding="utf-8") as f:
                     f.write(json.dumps(result))
                     return "Eliminated"
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist"
+        )
 
 
 @app.put(
@@ -155,7 +161,10 @@ def update_a_user(
                 with open("users.json", "w", encoding="utf-8") as f:
                     f.write(json.dumps(result))
                     return "Updated"
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist"
+        )
+
 
 # Tweets
 @app.get(
@@ -206,7 +215,9 @@ def get(tweet_id: str = Path()):
         for i in result:
             if i["tweet_id"] == tweet_id:
                 return i
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This tweet doesnot exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="This tweet doesnot exist"
+        )
 
 
 @app.delete(
@@ -224,7 +235,9 @@ def delete(tweet_id: str = Path()):
                 with open("tweets.json", "w", encoding="utf-8") as f:
                     f.write(json.dumps(result))
                     return "Eliminated"
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This tweet doesnot exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="This tweet doesnot exist"
+        )
 
 
 @app.put(
@@ -233,7 +246,9 @@ def delete(tweet_id: str = Path()):
     summary="Update a tweet",
     tags=["Tweets"],
 )
-def update(tweet_id: str = Path(), tweet: Tweet = Body(),):
+def update(
+    tweet_id: str = Path(), tweet: Tweet = Body(),
+):
     with open("tweets.json", "r+", encoding="utf-8") as f:
         result = json.load(f)
         for idx, obj in enumerate(result):
@@ -250,4 +265,6 @@ def update(tweet_id: str = Path(), tweet: Tweet = Body(),):
                 with open("tweets.json", "w", encoding="utf-8") as f:
                     f.write(json.dumps(result))
                     return "Updated"
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist"
+        )
