@@ -229,10 +229,25 @@ def delete(tweet_id: str = Path()):
 
 @app.put(
     "/tweets/{tweet_id}/update",
-    response_model=Tweet,
     status_code=status.HTTP_200_OK,
     summary="Update a tweet",
     tags=["Tweets"],
 )
-def update():
-    pass
+def update(tweet_id: str = Path(), tweet: Tweet = Body(),):
+    with open("tweets.json", "r+", encoding="utf-8") as f:
+        result = json.load(f)
+        for idx, obj in enumerate(result):
+            if obj["tweet_id"] == tweet_id:
+                result.pop(idx)
+                temp = tweet.dict()
+                temp["tweet_id"] = str(temp["tweet_id"])
+                temp["create_at"] = str(temp["create_at"])
+                if temp["update_at"]:
+                    temp["update_at"] = str(temp["update_at"])
+                temp["by"]["user_id"] = str(temp["by"]["user_id"])
+                temp["by"]["birth_date"] = str(temp["by"]["birth_date"])
+                result.append(temp)
+                with open("tweets.json", "w", encoding="utf-8") as f:
+                    f.write(json.dumps(result))
+                    return "Updated"
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This person doesnot exist")
