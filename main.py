@@ -211,13 +211,20 @@ def get(tweet_id: str = Path()):
 
 @app.delete(
     "/tweets/{tweet_id}",
-    response_model=Tweet,
     status_code=status.HTTP_200_OK,
     summary="Delete a tweet",
     tags=["Tweets"],
 )
-def delete():
-    pass
+def delete(tweet_id: str = Path()):
+    with open("tweets.json", "r+", encoding="utf-8") as f:
+        result = json.load(f)
+        for idx, obj in enumerate(result):
+            if obj["tweet_id"] == tweet_id:
+                result.pop(idx)
+                with open("tweets.json", "w", encoding="utf-8") as f:
+                    f.write(json.dumps(result))
+                    return "Eliminated"
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This tweet doesnot exist")
 
 
 @app.put(
